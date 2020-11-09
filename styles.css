@@ -1,0 +1,44 @@
+.trainingrequest-dateofrequest > div {
+    clear: none;
+    display: table;
+    float: none;
+    margin: 0;
+    width: auto;
+}
+
+.trainingrequest-learnersname > div {
+    clear: none;
+    float: none;
+    margin: 0;
+    width: auto;
+}
+
+.trainingrequest-learnersname {
+    margin-right: 30% !important;
+}
+
+.side-by-side {
+    display: inline-block;
+    white-space: nowrap;
+}
+
+.mform .fitem.trainingrequest-learnersname.side-by-side {
+    width: 50%;
+}
+
+.mform .fitem.trainingrequest-learnersname.side-by-side .felement.ftext {
+    float: left;
+    width: 31.3%;
+}
+
+@media (min-width: 992px) {
+    .mform .fitem.trainingrequest-learnersname.side-by-side .felement.ftext {
+        float: right;
+    }
+}
+
+@media (min-width: 1200px) {
+    .mform .fitem.trainingrequest-learnersname.side-by-side .felement.ftext {
+        width: 48.8%;
+    }
+}
