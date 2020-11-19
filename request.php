@@ -46,6 +46,7 @@ $requestform = new local_trainingrequest_request_form();
 if ($requestform->is_cancelled()) {
     redirect('/');
 } else if ($data = $requestform->get_data()) {
+    $data->learnersname = $USER->firstname . ' ' . $USER->lastname;
     helper::create_request($data);
 
     notice(get_string('requestcreated', 'local_trainingrequest'), '/');
