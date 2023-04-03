@@ -25,6 +25,8 @@ namespace local_trainingrequest;
 
 defined('MOODLE_INTERNAL') || die();
 
+use totara_evidence\models;
+
 class helper {
 
     public static function get_request_by_id($id) {
@@ -133,31 +135,26 @@ class helper {
         global $DB, $USER;
 
         if ($request != null && function_exists('customfield_save_data')) {
-            $data = new \stdClass();
-            $data->timemodified = time();
-            $data->userid = $request->userid;
-            $data->timecreated = $data->timemodified;
-            $data->usermodified = $USER->id;
-            $data->planid = 0;
-            $data->name = get_string('rolprefix', 'local_trainingrequest', $request->coursename);
-            $data->evidencedescription = array('text' => $request->coursename . ' from ' . $request->trainingprovider);
+            $name = get_string('rolprefix', 'local_trainingrequest', $request->coursename);
+
+            // Custom fields, not stored in totara_evidence_item.
+            $customfield_data = new \stdClass();
+            $customfield_data->customfield_evidencedescription_editor = array('text' => $request->coursename . ' from ' . $request->trainingprovider);
+
             if (get_config('local_trainingrequest', 'evidencetypeid') != 0) {
-                $data->evidencetypeid = get_config('local_trainingrequest', 'evidencetypeid');
+                $customfield_data->typeid = get_config('local_trainingrequest', 'evidencetypeid');
+                $type = models\evidence_type::load_by_id(get_config('local_trainingrequest', 'evidencetypeid'));
             }
-            // Custom fields, not stored in dp_plan_evidence.
             if (get_config('local_trainingrequest', 'customfield_datecompleted_enabled')) {
-                $name = 'customfield_' . get_config('local_trainingrequest', 'customfield_datecompleted');
-                $data->$name = $request->enddate;
+                $fieldname = 'customfield_' . get_config('local_trainingrequest', 'customfield_datecompleted');
+                $customfield_data->$fieldname = $request->enddate;
             }
             if (get_config('local_trainingrequest', 'customfield_cpdhours_enabled')) {
-                $name = 'customfield_' . get_config('local_trainingrequest', 'customfield_cpdhours');
-                $data->$name = !empty($request->cpdhours) ? $request->cpdhours : '';
+                $fieldname = 'customfield_' . get_config('local_trainingrequest', 'customfield_cpdhours');
+                $customfield_data->$fieldname = !empty($request->cpdhours) ? $request->cpdhours : '';
             }
 
-            $data->id = $DB->insert_record('dp_plan_evidence', $data);
-            customfield_save_data($data, 'evidence', 'dp_plan_evidence');
-            $item = $DB->get_record('dp_plan_evidence', array('id' => $data->id), '*', MUST_EXIST);
-            \totara_plan\event\evidence_created::create_from_instance($item)->trigger();
+            models\evidence_item::create($type, $request->userid, $customfield_data, $name);
 
             $request->status = 'addedtorol';
             $DB->update_record('trainingrequests', $request);
