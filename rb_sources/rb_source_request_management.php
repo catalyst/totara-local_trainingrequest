@@ -35,6 +35,7 @@ class rb_source_request_management extends rb_base_source {
         $this->columnoptions = $this->define_columnoptions();
         $this->filteroptions = $this->define_filteroptions();
         $this->sourcetitle = 'Training Requests';
+        $this->sourcelabel = 'Training Requests';
         $this->contentoptions = $this->define_contentoptions();
         $this->usedcomponents[] = 'local_trainingrequest';
 
