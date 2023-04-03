@@ -36,7 +36,7 @@ if ($hassiteconfig) {
         new lang_string('chargeablecodes', 'local_trainingrequest'),
         new lang_string('chargeablecodes_desc', 'local_trainingrequest'), ''));
 
-    $selectoptions = $DB->get_records_select_menu('dp_evidence_type', null, null, 'sortorder', 'id, name');
+    $selectoptions = $DB->get_records_select_menu('totara_evidence_type', null, null, '', 'id, name');
     $selectoptions[0] = 'No Evidence Type';
     $settings->add(new admin_setting_configselect('local_trainingrequest/evidencetypeid',
         new lang_string('evidencetype', 'local_trainingrequest'),
