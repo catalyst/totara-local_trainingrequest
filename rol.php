@@ -45,7 +45,7 @@ if ($action === 'add') {
     if ($request != null) {
         if ($request->enddate <= time()) {
             helper::add_training_to_rol($request);
-            totara_set_notification(get_string('evidenceadded', 'totara_plan'), null, array('class' => 'notifysuccess'));
+            \core\notification::success((get_string('evidence_item_created', 'totara_evidence')));
             notice(get_string('addedtorol', 'local_trainingrequest'), '/');
             return;
         }
